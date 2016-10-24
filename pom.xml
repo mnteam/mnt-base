@@ -1,73 +1,141 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.github.mnteam</groupId>
-  <artifactId>mnt-base</artifactId>
-  <version>0.9-SNAPSHOT</version>
-  <build>
-    <sourceDirectory>main/src</sourceDirectory>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  
-	
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<name>mnt-base</name>
+	<description>server layer frameworks: stream socket c/s framework; restful web and website framewok.</description>
+	<url>https://github.com/mnteam/mnt-base</url>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Bemail</name>
+			<email>smtd5@126.com</email>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:https://github.com/mnteam/mnt-base.git</connection>
+		<developerConnection>scm:git:https://github.com/mnteam/mnt-base.git</developerConnection>
+		<url>https://github.com/mnteam/mnt-base.git</url>
+	</scm>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github.mnteam</groupId>
+	<artifactId>mnt-base</artifactId>
+	<version>1.0</version>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.2.1</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.9.1</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+			<distributionManagement>
+				<repository>
+					<id>oss-sonatype-releases</id>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+				</repository>
+				<snapshotRepository>
+					<id>oss-sonatype-snapshots</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+	</profiles>
+
 	<repositories>
-        <repository>
-            <id>nexus</id>
-            <name>MVN Repository</name>
-            <url>http://mvnrepository.com</url>
-        </repository>
-    </repositories>
-  
-   <dependencies>
-   		<dependency>
-		    <groupId>commons-logging</groupId>
-		    <artifactId>commons-logging</artifactId>
-		    <version>1.2</version>
-		</dependency>
-		
+		<repository>
+			<id>nexus</id>
+			<name>MVN Repository</name>
+			<url>http://mvnrepository.com</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
 		<dependency>
-		    <groupId>org.eclipse.jetty</groupId>
-		    <artifactId>jetty-server</artifactId>
-		    <version>9.3.10.v20160621</version>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>org.eclipse.jetty</groupId>
-		    <artifactId>jetty-servlet</artifactId>
-		    <version>9.3.10.v20160621</version>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>9.3.10.v20160621</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>org.eclipse.jetty</groupId>
-		    <artifactId>jetty-webapp</artifactId>
-		    <version>9.3.10.v20160621</version>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlet</artifactId>
+			<version>9.3.10.v20160621</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>io.netty</groupId>
-		    <artifactId>netty-all</artifactId>
-		    <version>4.1.4.Final</version>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>9.3.10.v20160621</version>
 		</dependency>
-   
-   		<dependency>
-		    <groupId>com.sun.mail</groupId>
-		    <artifactId>javax.mail</artifactId>
-		    <version>1.5.6</version>
-		</dependency>
-		
+
 		<dependency>
-		    <groupId>dom4j</groupId>
-		    <artifactId>dom4j</artifactId>
-		    <version>1.6.1</version>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.1.4.Final</version>
 		</dependency>
-   		
-    </dependencies>
+
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.5.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+	</dependencies>
 </project>
