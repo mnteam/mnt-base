@@ -98,7 +98,7 @@ public abstract class AbstractJettyController implements Runnable {
             			confSetter.addServlet(servletClass, path);
             			log.info("add external servlet: " + clazz + " for path: " + path);
             		} catch(Exception e) {
-            			log.error("fail to construct/setup the external servlet: " +clazz + " for path: " + path);
+            			log.error("fail to construct/setup the external servlet: " +clazz + " for path: " + path, e);
             		}
         		}
         	}
