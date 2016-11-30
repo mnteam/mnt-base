@@ -32,7 +32,7 @@ import com.mnt.base.stream.comm.PacketProcessorManager;
 import com.mnt.base.stream.dtd.StreamPacket;
 import com.mnt.base.stream.dtd.StreamPacketDef;
 import com.mnt.base.stream.netty.Connection;
-import com.mnt.base.stream.server.StreamServerConfig;
+import com.mnt.base.util.ClientConfiguration;
 
 
 /**
@@ -50,7 +50,7 @@ public class ClientPacketProcessorManager extends PacketProcessorManager{
 	private static Map<Object, ClientPacketProcessorManager> processorManagerMap = new ConcurrentHashMap<Object, ClientPacketProcessorManager>();
 	
 	protected ClientPacketProcessorManager(){
-		super(StreamServerConfig.getIntProperty("client_tcp_event_threads", 1));
+		super(ClientConfiguration.getIntProperty("client_tcp_event_threads", 1));
 	}
 	
 	public synchronized static ClientPacketProcessorManager getInstance(Object client){

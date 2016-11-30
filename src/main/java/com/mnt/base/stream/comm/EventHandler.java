@@ -22,7 +22,7 @@ package com.mnt.base.stream.comm;
 
 public interface EventHandler {
 	
-	enum EventType {
+	public enum EventType {
 		Authenticated,
 		Closed
 	}

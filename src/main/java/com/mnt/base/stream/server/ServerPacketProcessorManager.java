@@ -32,7 +32,7 @@ import com.mnt.base.stream.netty.Connection;
 
 
 /**
- * packet processor manager, start multiple threads to process XMLPacket and send back the response 
+ * packet processor manager, start multiple threads to process StreamPacket and send back the response 
  * @author Peng Peng
  * #date 2014-3-30
  *
@@ -102,7 +102,7 @@ public class ServerPacketProcessorManager extends PacketProcessorManager{
 				
 				NetTraffic.log("process packet 3: ", resultObj);
 				
-				if(true/* resultObj != null*/){
+				if(resultObj != null){
 					responsePacket = StreamPacket.valueOf(requestId, new StringBuilder(processorIdentifier).append(StreamPacketDef.DOT).append(methodIdentifier).toString(), resultObj);
 				}/* else if(assureProcess) {
 					if(ConnectionManager.isValidConnection(connectionId)){

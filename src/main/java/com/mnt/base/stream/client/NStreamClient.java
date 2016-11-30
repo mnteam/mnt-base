@@ -1,14 +1,5 @@
 package com.mnt.base.stream.client;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -20,70 +11,95 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.mnt.base.stream.comm.EventHandler;
-import com.mnt.base.stream.comm.PacketProcessor;
 import com.mnt.base.stream.comm.EventHandler.EventType;
+import com.mnt.base.stream.comm.PacketProcessor;
 import com.mnt.base.stream.dtd.StreamPacket;
 import com.mnt.base.stream.dtd.StreamPacketDef;
 import com.mnt.base.stream.netty.Connection;
 import com.mnt.base.stream.netty.NConnectionHandler;
 import com.mnt.base.stream.netty.NStreamDecoder;
 import com.mnt.base.stream.netty.NStreamEncoder;
-import com.mnt.base.stream.server.StreamServerConfig;
+import com.mnt.base.util.ClientConfiguration;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class NStreamClient implements Runnable {
 
 	protected final Log log = LogFactory.getLog(getClass());
 
-	protected String serverIp;
-	protected int port;
-	protected Thread thread;
+	protected String serverHost;
+	protected int serverPort;
+	
+	protected Thread statusTrackThread;
 
-	String identifier;
+	protected String identifier;
 	protected String authToken;
 
-	protected volatile boolean reconnectFlag; // if the client need to reconnect to server.
-	protected volatile boolean runningFlag; // if the client need to shutdown.
-	protected volatile boolean connectedFlag; // if the client connected to server.
-	protected volatile boolean authenticateFlag; // if the client is authenticated.
+	protected volatile boolean reconnectFlag; 		// if the client need to reconnect to server.
+	protected volatile boolean runningFlag; 		// if the client need to shutdown.
+	protected volatile boolean connectedFlag; 		// if the client connected to server.
+	protected volatile boolean authenticateFlag; 	// if the client is authenticated.
 
 	protected Connection connection;
+	
+	private EventLoopGroup workerGroup;
 	
 	protected Map<EventType, EventHandler> eventHandlerMap = new HashMap<EventType, EventHandler>();
 	
 	// store the object which the connection is lost
 	protected BlockingQueue<PacketData> cachedRecordsQueue = new LinkedBlockingQueue<PacketData>();
 	
-	private EventLoopGroup workerGroup;
-
 	protected int maxFailedCacheSize = 10000;
+	
 	protected static final int CONNECT_TIMEOUT = 3; // mill seconds
 	
-	public NStreamClient(String serverIp, int port){
-		this(serverIp, port, 0, false);
+	public NStreamClient(String serverHost, int serverPort) {
+		this(serverHost, serverPort, 0, false);
 	}
 	
-	public NStreamClient(String serverIp, int port, int maxFailedCacheSize, boolean disableAutoReconnect) {
-		this.serverIp = serverIp;
-		this.port = port;
+	public NStreamClient(String serverHost, int serverPort, int maxFailedCacheSize, boolean disableAutoReconnect) {
+		this.serverHost = serverHost;
+		this.serverPort = serverPort;
 		runningFlag = true;
 		
 		if(!disableAutoReconnect) {
-			thread = new Thread(this);
-			thread.setDaemon(true);
-			thread.start();
+			statusTrackThread = new Thread(this, "NStreamClient Status Track Thread");
+			statusTrackThread.setDaemon(true);
+			statusTrackThread.start();
 		}
 		
-		if(maxFailedCacheSize > 0){
+		if(maxFailedCacheSize > 0) {
 			this.maxFailedCacheSize = maxFailedCacheSize;
 		}
 	}
 	
-	public void addPacketProcessor(PacketProcessor packetProcessor){
+	public void addPacketProcessor(PacketProcessor packetProcessor) {
 		ClientPacketProcessorManager.getInstance(this).addProcessor(packetProcessor);
 	}
 	
 	public void increasePacketProcessorThread(int threadSize) {
 		ClientPacketProcessorManager.getInstance(this).increaseProcessorThreads(threadSize);
+	}
+	
+	protected NServerConnectionHandler getNServerConnectionHandler(NStreamClient streamClient) {
+		return new NServerConnectionHandler(NStreamClient.this);
+	}
+	
+	protected void authenticate() {
+		Map<String, Object> authMap = new HashMap<String, Object>();
+		authMap.put(StreamPacketDef.AUTH_IDENTIFIER, NStreamClient.this.identifier);
+		authMap.put(StreamPacketDef.AUTH_TOKEN, NStreamClient.this.authToken);
+		
+		StreamPacket authPacket = StreamPacket.valueOf("0", StreamPacketDef.AUTH, authMap);
+		
+		connection.deliver(authPacket);
 	}
 
 	public boolean connect(String identifier, String authToken) {
@@ -94,11 +110,11 @@ public class NStreamClient implements Runnable {
 		if (!connectedFlag) {
 			try {
 				
-				if(connection != null){
+				if(connection != null) {
 					connection.close();
 				}
 		        
-				int threads = StreamServerConfig.getIntProperty("client_tcp_event_threads");
+				int threads = ClientConfiguration.getIntProperty("client_tcp_event_threads");
 		        workerGroup = threads > 0 ? new NioEventLoopGroup(threads) : new NioEventLoopGroup(threads);
 		        
 	            Bootstrap clientBootstrap = new Bootstrap(); 
@@ -108,7 +124,7 @@ public class NStreamClient implements Runnable {
 	            clientBootstrap.handler(new ChannelInitializer<SocketChannel>() {
 	                @Override
 	                public void initChannel(SocketChannel ch) throws Exception {
-	                    ch.pipeline().addLast(new NStreamDecoder(), new NStreamEncoder(), new NServerConnectionHandler(NStreamClient.this));
+	                    ch.pipeline().addLast(new NStreamDecoder(), new NStreamEncoder(), getNServerConnectionHandler(NStreamClient.this));
 	                    
 	                    ChannelHandlerContext chx = ch.pipeline().lastContext();
 	                    //connection = new NClientNIOConnection(chx, UUID.randomUUID().toString(), NStreamClient.this);
@@ -118,24 +134,18 @@ public class NStreamClient implements Runnable {
 	                }
 	            });
 
-	            clientBootstrap.connect(serverIp, port).await(CONNECT_TIMEOUT, TimeUnit.SECONDS);
+	            clientBootstrap.connect(serverHost, serverPort).await(CONNECT_TIMEOUT, TimeUnit.SECONDS);
 	            
 	            connectedFlag = (connection != null);
 				
 				if(connectedFlag) {
-					Map<String, Object> authMap = new HashMap<String, Object>();
-					authMap.put(StreamPacketDef.AUTH_IDENTIFIER, NStreamClient.this.identifier);
-					authMap.put(StreamPacketDef.AUTH_TOKEN, NStreamClient.this.authToken);
-					
-					StreamPacket authPacket = StreamPacket.valueOf("0", StreamPacketDef.AUTH, authMap);
-					
-					connection.deliver(authPacket);
+					authenticate();
 				}
 				
 			} catch (Exception e) {
 
 				startReconnect();
-				log.error("Error while create socket connection to monitor server: " + serverIp + ", port: " + port, e);
+				log.error("Error while create socket connection to monitor server: " + serverHost + ", port: " + serverPort, e);
 			}
 		}
 
