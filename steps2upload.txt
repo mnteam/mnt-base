@@ -1,0 +1,4 @@
+1. mvn deploy -P release
+(with simple code)
+2. access https://oss.sonatype.org
+3. close the status.
