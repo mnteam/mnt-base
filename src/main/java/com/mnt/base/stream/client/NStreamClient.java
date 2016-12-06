@@ -177,12 +177,17 @@ public class NStreamClient implements Runnable {
 		return this.connect(identifier, authToken);
 	}
 
+	// default try to reconnect every 30 sec
+	protected long checkIntervalMs() {
+		return 1000 * 30;
+	}
+	
 	@Override
 	public void run() {
 		while (runningFlag) {
 			
 			try {
-				Thread.sleep(1000 * 30); // try to reconnect every 30 sec
+				Thread.sleep(checkIntervalMs()); 
 			} catch (InterruptedException e) {
 				log.error("Error while sleeping, the client would be shutdown now?", e);
 				break;
