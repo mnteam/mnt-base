@@ -115,7 +115,7 @@ public class NStreamClient implements Runnable {
 				}
 		        
 				int threads = ClientConfiguration.getIntProperty("client_tcp_event_threads");
-		        workerGroup = threads > 0 ? new NioEventLoopGroup(threads) : new NioEventLoopGroup(threads);
+		        workerGroup = threads > 0 ? new NioEventLoopGroup(threads) : new NioEventLoopGroup(1);
 		        
 	            Bootstrap clientBootstrap = new Bootstrap(); 
 	            clientBootstrap.group(workerGroup);
@@ -173,7 +173,7 @@ public class NStreamClient implements Runnable {
 		}
 	}
 
-	private boolean connect() {
+	protected boolean connect() {
 		return this.connect(identifier, authToken);
 	}
 
@@ -193,7 +193,9 @@ public class NStreamClient implements Runnable {
 				break;
 			}
 			
-			if (authenticateFlag) {
+			if (reconnectFlag) {
+				connect();
+			} else if (authenticateFlag) {
 				try{
 					
 					if(connection.isClosed()){
@@ -206,7 +208,8 @@ public class NStreamClient implements Runnable {
 				}catch(Exception e){
 					startReconnect();
 				}
-			} else if (reconnectFlag) {
+			} else {
+				connectedFlag = false;
 				connect();
 			}
 		}
@@ -266,7 +269,7 @@ public class NStreamClient implements Runnable {
 		workerGroup.shutdownGracefully();
 	}
 	
-	private void startReconnect() {
+	protected void startReconnect() {
 		reconnectFlag = true;
 		connectedFlag = false;
 		authenticateFlag = false;
