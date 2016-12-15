@@ -79,7 +79,7 @@ public class AsyncResponseDelegator {
 	public static void clearWaiting(List<Object> requestIds) {
 		if(!CommonUtil.isEmpty(requestIds)) {
 			for(Object requestId : requestIds) {
-				putResult(requestId, null);
+				putResult(requestId, NULL_OBJ);
 			}
 		}
 	}
