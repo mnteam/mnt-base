@@ -196,6 +196,7 @@ public class NStreamClient implements Runnable {
 			if (reconnectFlag) {
 				startReconnect();
 				connect();
+				reconnectFlag = false;
 			} else if (authenticateFlag) {
 				try{
 					
