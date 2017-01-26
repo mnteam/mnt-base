@@ -1,4 +1,4 @@
-package com.mnt.base.util;
+package com.mnt.base.util.filequeue;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,6 +87,10 @@ public class FileQueue<T> {
 	}
 	
 	private boolean allowWrite(int requiredSize) {
+		if(requiredSize > maxAllowedSize) {
+			throw new RuntimeException("required data size " + requiredSize + " exceed the max allowed size in queue file: " + maxAllowedSize);
+		}
+		
 		return (writeCursor.realIndex() - readCursor.realIndex() + requiredSize) < maxAllowedSize;
 	}
 
@@ -215,11 +219,6 @@ public class FileQueue<T> {
 		}
 	}
 	
-	public interface Serializier<T> {
-		byte[] serialize(T t);
-		T deserialize(byte[] bs);
-	}
-	
 	public static byte[] intToBytes(int i) {
 		return new byte[]{(byte)(i), (byte)(i >> 8), (byte)(i >> 16), (byte)(i >> 24)};
 	}
@@ -229,7 +228,7 @@ public class FileQueue<T> {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		FileQueue<String> fq = new FileQueue<>("/Users/webull/ws_java/test/conf/tmp", 100000, new Serializier<String>() {
+		FileQueue<String> fq = new FileQueue<>("/Users/webull/ws_java/test/conf/tmp", 100, new Serializier<String>() {
 			
 			@Override
 			public byte[] serialize(String t) {
