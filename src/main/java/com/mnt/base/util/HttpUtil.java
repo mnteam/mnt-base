@@ -48,6 +48,16 @@ public class HttpUtil {
 	
 	private static final Log log = LogFactory.getLog(HttpUtil.class);
 	
+	private static int connectionTimeout = -1;
+	private static int readTimeout = -1;
+	
+	public static void setTimeout(int connectionTimeout, int readTimeout) {
+		HttpUtil.connectionTimeout = connectionTimeout;
+		HttpUtil.readTimeout = readTimeout;
+	}
+	
+	
+	
 	public static Map<String, Object> processGetRequest(String url){
 		return processGetRequest(url, null, null);
 	}
@@ -153,6 +163,8 @@ public class HttpUtil {
 				log.error("should not happen to get error while set the request method as GET.", e);
 			}
 			
+			setTimeout(connection);
+			
 			if(!CommonUtil.isEmpty(headerValue)){
 				for(String key : headerValue.keySet()){
 					connection.setRequestProperty(key, headerValue.get(key));
@@ -208,6 +220,8 @@ public class HttpUtil {
 			// need to specify the content type for post request
 			connection.setRequestProperty("Content-Type", "application/json");
 			
+			setTimeout(connection);
+			
 			String resultStr = null;
 			
 			try {
@@ -240,6 +254,16 @@ public class HttpUtil {
 		}
 		
 		return null;
+	}
+	
+	private static void setTimeout(HttpURLConnection conn) {
+		if(connectionTimeout > 0) {
+			conn.setConnectTimeout(connectionTimeout);
+		}
+		
+		if(readTimeout > 0) {
+			conn.setReadTimeout(readTimeout);
+		}
 	}
 	
 	public static String readData(InputStream in) throws IOException {
