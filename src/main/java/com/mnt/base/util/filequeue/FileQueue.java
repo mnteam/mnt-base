@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 
  * 
  * @author Peng Peng
- * @date 2017年1月25日
+ * #date 2017年1月25日
  * @version 1.0
  * since JDK 1.8
  *
@@ -227,7 +227,7 @@ public class FileQueue<T> {
 		return (bs[0] & 0xff) | (bs[1] << 8 & 0xff00) | (bs[2] << 16 & 0xff0000) | (bs[3] << 24);
 	}
 	
-	public static void main(String[] args) throws IOException {
+	/*public static void main(String[] args) throws IOException {
 		FileQueue<String> fq = new FileQueue<>("/Users/webull/ws_java/test/conf/tmp", 100, new Serializier<String>() {
 			
 			@Override
@@ -256,5 +256,5 @@ public class FileQueue<T> {
 		System.in.read();
 		
 		fq.close();
-	}
+	}*/
 }

@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * 
  * 1. check the expression match
  * 
- * e.g. [M3] { k = 1 and M2.k > 3 }
+ * e.g. [M3] { k = 1 and M2.k &gt; 3 }
  * 
  * 2. retrieve the value
  * e.g. M3.k|int or k|int

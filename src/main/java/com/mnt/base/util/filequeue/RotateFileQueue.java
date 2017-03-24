@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 允许使用多个文件进行轮转，最少2个
  * 
  * @author Peng Peng
- * @date 2017年1月25日
+ * #date 2017年1月25日
  * @version 1.0
  * since JDK 1.8
  *
@@ -70,17 +70,17 @@ public class RotateFileQueue<T> {
 			this.maxAllowedSize = maxAllowedSize;
 			this.fileQueueSize = fileQueueSize;
 			
-			fQueue = new ArrayList<>(fileQueueSize);
+			fQueue = new ArrayList<File>(fileQueueSize);
 			for(int i = 0; i < fileQueueSize; i++) {
 				fQueue.add(new File(filePath + "." + i));
 			}
 			
 			//清除如果存在的任何文件
-			fQueue.stream().forEach(f -> {
+			for(File f : fQueue) {
 				if(f.exists()) {
 					f.delete();
 				}
-			});
+			}
 			
 			Thread t = new Thread(this);
 			t.setDaemon(true);
@@ -306,7 +306,7 @@ public class RotateFileQueue<T> {
 		return (bs[0] & 0xff) | (bs[1] << 8 & 0xff00) | (bs[2] << 16 & 0xff0000) | (bs[3] << 24);
 	}
 	
-	public static void main(String[] args) throws IOException {
+	/*public static void main(String[] args) throws IOException {
 		RotateFileQueue<String> fq = new RotateFileQueue<>("/Users/webull/ws_java/test/conf/tmp", 1024, 5, new Serializier<String>() {
 			
 			@Override
@@ -320,12 +320,13 @@ public class RotateFileQueue<T> {
 			}
 		});
 		
-		new Thread(()->{
-			int j = 0;
-			while(j ++ < 1000) {
-				System.out.println(fq.poll());
-			}
-		}).start();
+		new Thread(new Runnable() {
+			public void run() {
+				int j = 0;
+				while(j ++ < 1000) {
+					System.out.println(fq.poll());
+				}
+			}}).start();
 		
 		int i = 0;
 		while(i++ < 1000) {
@@ -335,5 +336,5 @@ public class RotateFileQueue<T> {
 		System.in.read();
 		
 		fq.close();
-	}
+	}*/
 }
