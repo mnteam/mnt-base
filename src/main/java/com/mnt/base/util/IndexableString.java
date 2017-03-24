@@ -18,53 +18,53 @@
  * 
  */
 
-package com.mnt.base.json;
+package com.mnt.base.util;
 
 /**
  * index marked string for json process.
  * @author Peng Peng
  *
  */
-class IndexableString {
+public class IndexableString {
 	private StringBuilder src;
 	private int indexNum;
 	
-	IndexableString() {
+	public IndexableString() {
 		this(0 , null);
 	}
 	
-	IndexableString(String str) {
+	public IndexableString(String str) {
 		this(0 , str);
 	}
 	
-	IndexableString(int index, String str) {
+	public IndexableString(int index, String str) {
 		this.src = new StringBuilder(str);
 		this.indexNum = index;
 	}
 	
-	StringBuilder source() {
+	public StringBuilder source() {
 		return this.src;
 	}
 	
-	int moveIndex() {
+	public int moveIndex() {
 		return moveIndex(1);
 	}
 	
-	int moveIndex(int increment) {
+	public int moveIndex(int increment) {
 		return indexNum += increment ;
 	}
 	
-	int moveAndTrimStart() {
+	public int moveAndTrimStart() {
 		return moveAndTrimStart(1);
 	}
 	
-	int moveAndTrimStart(int increment) {
+	public int moveAndTrimStart(int increment) {
 		indexNum += increment;
 		trimStart();
 		return indexNum;
 	}
 	
-	int findNearestIndex(char... chs) {
+	public int findNearestIndex(char... chs) {
 		int i = indexNum;
 		while(i < src.length()) {
 			for(char ch : chs) {
@@ -77,7 +77,7 @@ class IndexableString {
 		return -1;
 	}
 	
-	int indexOf(String str) {
+	public int indexOf(String str) {
 		int idx = this.src.indexOf(str, indexNum) - indexNum;
 		
 		if(idx < 0) {
@@ -87,11 +87,11 @@ class IndexableString {
 		return idx;
 	}
 	
-	boolean startsWith(String str) {
+	public boolean startsWith(String str) {
 		return str.length() <= length() ? valueBy(str.length()).equals(str) : false; 
 	}
 	
-	int currentIndex() {
+	public int currentIndex() {
 		return indexNum;
 	}
 	
@@ -103,11 +103,11 @@ class IndexableString {
 		return src.length() > indexNum;
 	}
 	
-	char currentChar() {
+	public char currentChar() {
 		return src.charAt(indexNum);
 	}
 	
-	char charAt(int index) {
+	public char charAt(int index) {
 		return src.charAt(indexNum + index);
 	}
 	
@@ -130,7 +130,7 @@ class IndexableString {
 	 * @return
 	 */
 	private static int TRIMABLE_CHAR = (' ' + 1);
-	IndexableString trimStart(){
+	public IndexableString trimStart(){
 		if(currentChar() < TRIMABLE_CHAR) {
 			indexNum ++;
 			trimStart();
@@ -138,7 +138,7 @@ class IndexableString {
 		return this;
 	}
 	
-	void clear() {
+	public void clear() {
 		src.setLength(0);
 		src = null;
 		indexNum = 0;
