@@ -103,7 +103,7 @@ public class RotateFileQueue<T> {
 					currentFile(true).delete();
 				}
 				
-				if(!nextFile(true).exists()) {
+				while(!nextFile(true).exists()) {
 					
 					synchronized (rotateLock) {
 						try {
@@ -186,7 +186,7 @@ public class RotateFileQueue<T> {
 				}
 				
 				// 如果接下来要写的文件是当前正在读的文件，暂停等待读文件转移到下一个rotateIndex
-				if(nextFile(false).exists()) {
+				while(nextFile(false).exists()) {
 					synchronized (rotateLock) {
 						try {
 							rotateLock.wait(100);
