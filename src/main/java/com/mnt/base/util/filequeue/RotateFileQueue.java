@@ -63,6 +63,12 @@ public class RotateFileQueue<T> {
 		
 		RotateFile(String filePath, int maxAllowedSize, int fileQueueSize) {
 			
+			File path = new File(filePath);
+			File parentPath = path.getParentFile();
+			if(!parentPath.exists()) {
+				parentPath.mkdirs();
+			}
+			
 			if(fileQueueSize < 2 || maxAllowedSize < 1024) {
 				throw new IllegalArgumentException("[#RotateFile]fileQueueSize should be greater than 2 and maxAllowedSize should be greater than 1024.");
 			}
@@ -162,6 +168,12 @@ public class RotateFileQueue<T> {
 					delta = raf.read(buf, start, len - start);
 					if(delta > 0) {
 						start += delta;
+					} else {
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							throw new RuntimeException("error while sleep to get the next data.", e);
+						}
 					}
 				} catch (IOException e) {
 					throw new RuntimeException("error while read data from file.", e);
