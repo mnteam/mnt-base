@@ -47,6 +47,10 @@ public final class NamedSyncTarget {
 		if(MapUtil.containsKey(memMap, lockType, lockName)){
 			NamedSyncTarget nl = (NamedSyncTarget)MapUtil.getValue(memMap, lockType, lockName);
 			
+			if(nl == null) {
+				return getTarget(lockType, lockName);
+			}
+			
 			nl.lockCount.incrementAndGet();
 			return nl;
 		}else{
