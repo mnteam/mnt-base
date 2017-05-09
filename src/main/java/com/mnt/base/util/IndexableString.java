@@ -131,7 +131,7 @@ public class IndexableString {
 	 */
 	private static int TRIMABLE_CHAR = (' ' + 1);
 	public IndexableString trimStart(){
-		if(currentChar() < TRIMABLE_CHAR) {
+		if(length() > 0 && currentChar() < TRIMABLE_CHAR) {
 			indexNum ++;
 			trimStart();
 		}
