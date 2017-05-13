@@ -20,6 +20,7 @@
 
 package com.mnt.base.console;
 
+import java.io.File;
 import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
@@ -74,6 +75,14 @@ public final class WebJettyController extends AbstractJettyController implements
 		}
 		
         final WebAppContext webappContext = new WebAppContext(BaseConfiguration.getServerHome(true) + webRootPath, BaseConfiguration.getServerContextPath());
+        webappContext.setParentLoaderPriority(true);
+        File tmpFolder = new File(BaseConfiguration.getServerHome() + "tmp");
+        if(!tmpFolder.exists()) {
+        	tmpFolder.mkdirs();
+        }
+        webappContext.setTempDirectory(tmpFolder);
+        webappContext.setAttribute("javax.servlet.context.tempdir", tmpFolder);
+        
         jettyServer.setHandler(webappContext);
         
         super.setupExternalConf(new ExternalConfSetter() {
