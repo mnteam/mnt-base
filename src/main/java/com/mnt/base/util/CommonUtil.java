@@ -21,6 +21,7 @@
 package com.mnt.base.util;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -490,6 +491,32 @@ public final class CommonUtil {
 		}
 		
 		return val;
+	}
+	
+	/**
+	 * Parse object as BigDecimal value, if parse failed, return BigDecimal.ZERO.
+	 * 
+	 * @param obj
+	 * @param defaultValue
+	 * @return
+	 */
+	public static BigDecimal parseAsBigDecimal(Object obj) {
+		return parseAsBigDecimal(obj, BigDecimal.ZERO);
+	}
+	
+	/**
+	 * Parse object as BigDecimal value, if parse failed, return defaultValue.
+	 * 
+	 * @param obj
+	 * @param defaultValue
+	 * @return
+	 */
+	public static BigDecimal parseAsBigDecimal(Object obj, BigDecimal defaultVal) {
+		try {
+			return CommonUtil.isEmpty(obj) ? defaultVal : new BigDecimal(String.valueOf(obj));
+		} catch(Exception e) {
+			return defaultVal;
+		}
 	}
 	
 	/**

@@ -44,6 +44,15 @@ public interface IContext {
 	 */
 	boolean save(String sql, List<Object> params);
 	
+	/**
+	 * save data with sql and params, also return the generate key(the first)
+	 * 
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	<PK> PK saveAndReturnGeneratedKey(String sql, List<Object> params);
+	
 	
 	/**
 	 * update data with sql and params

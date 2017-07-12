@@ -37,6 +37,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.mnt.base.util.BaseConfiguration;
+import com.mnt.base.util.CommonUtil;
 
 
 
@@ -52,6 +53,7 @@ public abstract class DBFactory {
 	protected static final String DB_URL        = "jdbc.url";
 	protected static final String DB_DRIVER     = "jdbc.driver";
 	protected static final String DB_POOL_SIZE  = "jdbc.maxPoolSize";
+	protected static final String DB_QUERY_TIMEOUT  = "jdbc.queryTimeout";
 	
 	private BlockingQueue<Connection> connPool = new LinkedBlockingQueue<Connection>();
 	private BlockingQueue<Connection> usingConnPool = new LinkedBlockingQueue<Connection>();
@@ -64,7 +66,7 @@ public abstract class DBFactory {
 	
 	private static Log log = LogFactory.getLog(DBFactory.class);
 	
-	protected static ThreadLocal<TransactionOwner> toHolder = new ThreadLocal<TransactionOwner>();
+	protected ThreadLocal<TransactionOwner> toHolder = new ThreadLocal<TransactionOwner>();
 	
 	enum FactoryType{
 		RELATION_DB,
@@ -225,6 +227,10 @@ public abstract class DBFactory {
 		}
 			
 		return connection;
+	}
+	
+	public int getQueryTimeout() {
+		return CommonUtil.parseAsInt(prop.getProperty(DB_QUERY_TIMEOUT), -1);
 	}
 	
 	public void close(Object o){
