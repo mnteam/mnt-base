@@ -497,7 +497,6 @@ public final class CommonUtil {
 	 * Parse object as BigDecimal value, if parse failed, return BigDecimal.ZERO.
 	 * 
 	 * @param obj
-	 * @param defaultValue
 	 * @return
 	 */
 	public static BigDecimal parseAsBigDecimal(Object obj) {
@@ -508,7 +507,7 @@ public final class CommonUtil {
 	 * Parse object as BigDecimal value, if parse failed, return defaultValue.
 	 * 
 	 * @param obj
-	 * @param defaultValue
+	 * @param defaultVal
 	 * @return
 	 */
 	public static BigDecimal parseAsBigDecimal(Object obj, BigDecimal defaultVal) {
