@@ -39,6 +39,8 @@ public class AsyncMailHelper implements Runnable {
 	
 	private static final Log log = LogFactory.getLog(AsyncMailHelper.class);
 	
+	private static final int MAX_RETRY = BaseConfiguration.getIntProperty("async_mail_send_max_retry", 3);
+	
 	private static class MailHolder {
 		String mailType;
 		String mailTos;
@@ -77,7 +79,6 @@ public class AsyncMailHelper implements Runnable {
 	}
 	
 	public static void sendMail(String mailType, String mailTos, Map<String, Object> infoMap) {
-		
 		mailQueue.offer(new MailHolder(mailType, mailTos, infoMap));
 	}
 
@@ -95,13 +96,20 @@ public class AsyncMailHelper implements Runnable {
 			
 			if(mh != null) {
 				
-				try {
-					MailHelper.sendMail(mh.mailType, mh.mailTos, mh.infoMap);
-				} catch(Exception e) {
-					log.error("fail to send the email: " + mh, e);
-				}
-				
+				sendMail(mh, MAX_RETRY);
 				CommonUtil.deepClear(mh.infoMap);
+			}
+		}
+	}
+
+	private void sendMail(MailHolder mh, int maxRetry) {
+		try {
+			MailHelper.sendMail(mh.mailType, mh.mailTos, mh.infoMap);
+		} catch(Exception e) {
+			if(maxRetry > 0) {
+				sendMail(mh, --maxRetry);
+			} else {
+				log.error("fail to send the email: " + mh, e);
 			}
 		}
 	}
