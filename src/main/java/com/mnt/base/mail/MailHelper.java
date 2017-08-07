@@ -63,6 +63,8 @@ public class MailHelper {
 		props.put("mail.debug", "false");
 		props.put("mail.smtp.host", BaseConfiguration.getProperty("mail_server_host"));
 		props.put("mail.smtp.port", BaseConfiguration.getIntProperty("mail_server_port", 25));
+		props.put("mail.smtp.connectiontimeout", BaseConfiguration.getIntProperty("mail_smtp_connection_timeout", 10000));
+		props.put("mail.smtp.timeout", BaseConfiguration.getIntProperty("mail_smtp_timeout", 10000));
 		
 		String authType = BaseConfiguration.getProperty("mail_auth_type");
 		
