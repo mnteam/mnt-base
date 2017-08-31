@@ -38,10 +38,8 @@ import com.mnt.base.stream.netty.Connection;
 
 /**
  * Implementation of {@link Connection} interface specific for NIO connections when using
- * the MINA framework.<p>
- *
- * MINA project can be found at <a href="http://mina.apache.org">here</a>.
- *
+ * the Netty framework.<p>
+
  * @author Peng Peng
  */
 public abstract class NAbstractNIOConnection implements Connection {
