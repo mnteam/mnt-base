@@ -49,9 +49,9 @@ public abstract class NAbstractNIOConnection implements Connection {
     /**
      * The utf-8 charset for decoding and encoding stream packet streams.
      */
-    private ChannelHandlerContext channelHandlerContext;
-    private String connectionId;
-    private List<StreamPacket> backupDeliverer = new ArrayList<StreamPacket>();
+    protected ChannelHandlerContext channelHandlerContext;
+    protected String connectionId;
+    protected List<StreamPacket> backupDeliverer = new ArrayList<StreamPacket>();
 
     /**
      * Flag that specifies if the connection should be considered closed. Closing a NIO connection
