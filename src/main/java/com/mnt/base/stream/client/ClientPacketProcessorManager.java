@@ -53,6 +53,10 @@ public class ClientPacketProcessorManager extends PacketProcessorManager{
 		super(ClientConfiguration.getIntProperty("client_tcp_event_threads", 1));
 	}
 	
+	static {
+		PacketProcessorManager.enablePacketCacheQueue = !ClientConfiguration.getBoolProperty("disable_packet_cache_queue", false);
+	}
+	
 	public synchronized static ClientPacketProcessorManager getInstance(Object client){
 		
 		ClientPacketProcessorManager packetProcessorManager = processorManagerMap.get(client);
