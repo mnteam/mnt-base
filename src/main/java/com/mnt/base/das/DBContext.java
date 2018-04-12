@@ -107,6 +107,7 @@ public class DBContext implements IContext {
 		
 		if(con != null){
 			PreparedStatement prepStmt = null;
+			ResultSet rs = null;
 			try {
 				prepStmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				
@@ -117,7 +118,7 @@ public class DBContext implements IContext {
 				}
 				
 				if(prepStmt.executeUpdate() == 1) { 
-					ResultSet rs = prepStmt.getGeneratedKeys();
+					rs = prepStmt.getGeneratedKeys();
 					
 					if(rs.next()) {
 						pk = (PK)rs.getObject(1);
@@ -128,6 +129,11 @@ public class DBContext implements IContext {
 			} catch (SQLException e) {
 				throw new RuntimeException("Error when invoke DBContext.save(sql, params).", e);
 			}finally{
+				
+				if(rs != null){
+					getDBFactory().close(rs);
+				}
+				
 				if(prepStmt != null){
 					close(prepStmt);
 				}
@@ -304,6 +310,11 @@ public class DBContext implements IContext {
 			} catch (SQLException e) {
 				throw new RuntimeException(String.format("Error when invoke DBContext.count(%s, %s).", sql, params), e);
 			}finally{
+				
+				if(rs != null){
+					getDBFactory().close(rs);
+				}
+				
 				if(prepStmt != null){
 					getDBFactory().close(prepStmt);
 				}
@@ -343,6 +354,11 @@ public class DBContext implements IContext {
 			} catch (SQLException e) {
 				throw new RuntimeException(String.format("Error when invoke DBContext.exists(%s, %s).", sql, params), e);
 			}finally{
+				
+				if(rs != null){
+					getDBFactory().close(rs);
+				}
+				
 				if(prepStmt != null){
 					getDBFactory().close(prepStmt);
 				}
@@ -391,6 +407,11 @@ public class DBContext implements IContext {
 			} catch (SQLException e) {
 				throw new RuntimeException(String.format("Error when invoke DBContext.query(%s, %s, %s).", sql, params, resultKeys), e);
 			}finally{
+				
+				if(rs != null){
+					getDBFactory().close(rs);
+				}
+				
 				if(prepStmt != null){
 					getDBFactory().close(prepStmt);
 				}
@@ -446,6 +467,11 @@ public class DBContext implements IContext {
 			} catch (SQLException e) {
 				throw new RuntimeException(String.format("Error when invoke DBContext.query(%s, %s).", sql, params), e);
 			}finally{
+				
+				if(rs != null){
+					getDBFactory().close(rs);
+				}
+				
 				if(prepStmt != null){
 					getDBFactory().close(prepStmt);
 				}
@@ -494,6 +520,11 @@ public class DBContext implements IContext {
 			} catch (SQLException e) {
 				throw new RuntimeException(String.format("Error when invoke DBContext.query(%s, %s, %s).", sql, params, resultKeyMap), e);
 			}finally{
+				
+				if(rs != null){
+					getDBFactory().close(rs);
+				}
+				
 				if(prepStmt != null){
 					getDBFactory().close(prepStmt);
 				}
@@ -635,6 +666,11 @@ public class DBContext implements IContext {
 			} catch (SQLException e) {
 				throw new RuntimeException(String.format("Error when invoke DBContext.get(%s, %s, %s).", sql, params, resultKeys), e);
 			}finally{
+				
+				if(rs != null){
+					getDBFactory().close(rs);
+				}
+				
 				if(prepStmt != null){
 					getDBFactory().close(prepStmt);
 				}
@@ -687,6 +723,11 @@ public class DBContext implements IContext {
 			} catch (SQLException e) {
 				throw new RuntimeException(String.format("Error when invoke DBContext.get(%s, %s).", sql, params), e);
 			}finally{
+				
+				if(rs != null){
+					getDBFactory().close(rs);
+				}
+				
 				if(prepStmt != null){
 					getDBFactory().close(prepStmt);
 				}
@@ -731,6 +772,10 @@ public class DBContext implements IContext {
 			} catch (SQLException e) {
 				throw new RuntimeException(String.format("Error when invoke DBContext.get(%s, %s, %s).", sql, params, resultKeyMap), e);
 			}finally{
+				if(rs != null){
+					getDBFactory().close(rs);
+				}
+				
 				if(prepStmt != null){
 					getDBFactory().close(prepStmt);
 				}
