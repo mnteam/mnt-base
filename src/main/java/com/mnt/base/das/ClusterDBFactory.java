@@ -390,25 +390,25 @@ public abstract class ClusterDBFactory extends DBFactory {
 					((PreparedStatement) o).close();
 				} catch (SQLException e) {
 					log.error("Error while closing the PreparedStatement resource.", e);
-					throw new RuntimeException("Error while closing the PreparedStatement resource.", e);
+					//throw new RuntimeException("Error while closing the PreparedStatement resource.", e);
 				}
 			}else if(o instanceof ResultSet){
 				try {
 					((ResultSet) o).close();
 				} catch (SQLException e) {
 					log.error("Error while closing the ResultSet resource.", e);
-					throw new RuntimeException("Error while closing the ResultSet resource.", e);
+					//throw new RuntimeException("Error while closing the ResultSet resource.", e);
 				}
 			}else if(o instanceof Statement){
 				try {
 					((Statement) o).close();
 				} catch (SQLException e) {
 					log.error("Error while closing the Statement resource.", e);
-					throw new RuntimeException("Error while closing the Statement resource.", e);
+					//throw new RuntimeException("Error while closing the Statement resource.", e);
 				}
 			}else{
 				log.error("Unknow db resource type: " + o.getClass().getName());
-				throw new RuntimeException("Unknow db resource type: " + o.getClass().getName());
+				//throw new RuntimeException("Unknow db resource type: " + o.getClass().getName());
 			}
 		}
 	}
