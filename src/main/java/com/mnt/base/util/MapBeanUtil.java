@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
@@ -78,6 +79,7 @@ public class MapBeanUtil {
 	private static final int STRING_INDEX 	= 10;
 	private static final int DATE_INDEX 	= 11;
 	private static final int OBJECT_INDEX 	= 12;
+	private static final int BIGDECIMAL_INDEX = 13;
 	
 	static {
 		// register the default supported class types
@@ -106,6 +108,7 @@ public class MapBeanUtil {
 		CONSTANT_CLASS_INDEX_MAP.put(StringBuilder.class, STRING_INDEX);
 		CONSTANT_CLASS_INDEX_MAP.put(StringBuffer.class, STRING_INDEX);
 		CONSTANT_CLASS_INDEX_MAP.put(Object.class, OBJECT_INDEX);
+		CONSTANT_CLASS_INDEX_MAP.put(BigDecimal.class, BIGDECIMAL_INDEX);
 		
 		INTERFACE_MAPPING_CLASSES.put(Collection.class, ArrayList.class);
 		INTERFACE_MAPPING_CLASSES.put(List.class, ArrayList.class);
