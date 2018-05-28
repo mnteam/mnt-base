@@ -26,6 +26,8 @@ import com.mnt.base.util.IndexableString;
  */
 public abstract class AbstractEvaluator implements Evaluator {
 	
+	protected static String MAP_INDEX_PREFIX = "M";
+	
 	static {
 		SQL_EVAL_MAP.put(SQL_EXPRESSION_EQ, SQL_EXPRESSION_EQ_N);
 		SQL_EVAL_MAP.put(SQL_EXPRESSION_EQ2, SQL_EXPRESSION_EQ_N);
@@ -62,6 +64,10 @@ public abstract class AbstractEvaluator implements Evaluator {
 	
 	public AbstractEvaluator() {
 		// empty
+	}
+	
+	public static void setMapIndexPrefiex(String prefix) {
+		MAP_INDEX_PREFIX = prefix;
 	}
 	
 	public AbstractEvaluator(String valuePath) {

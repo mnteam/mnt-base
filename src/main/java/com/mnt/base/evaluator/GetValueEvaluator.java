@@ -1,6 +1,7 @@
 package com.mnt.base.evaluator;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,13 @@ public class GetValueEvaluator extends AbstractEvaluator {
 		} else {
 			String[] tokens = expression.split(PERIOD_REGEX);
 			
+			if(tokens[0].startsWith(MAP_INDEX_PREFIX)) {
+				layer = CommonUtil.parseAsInt(tokens[0].substring(MAP_INDEX_PREFIX.length()), -1) - 1;
+				if(layer < 0) {
+					layer = null;
+				}
+			}
+			
 			keys = Arrays.copyOfRange(tokens, layer == null ? 0 : 1, tokens.length);
 		}
 	}
@@ -42,7 +50,7 @@ public class GetValueEvaluator extends AbstractEvaluator {
 		if(constantValue != null) {
 			return constantValue;
 		} else if(ms != null){
-			int i = layer == null ? ms.length - 1: layer;
+			int i = layer == null ? ms.length - 1 : layer;
 			Map<String, Object> m = CommonUtil.uncheckedMapCast(ms.length > i ? ms[i] : null); 
 			return format(m != null ? getValue(m) : null);
 		} else {
@@ -99,5 +107,19 @@ public class GetValueEvaluator extends AbstractEvaluator {
 		}
 		
 		return result;
+	}
+	
+	public static void main(String[] args) {
+		Map<String, Object> map1 = new HashMap<>();
+		Map<String, Object> map2 = new HashMap<>();
+		Map<String, Object> map3 = new HashMap<>();
+		
+		Expression exp = new Expression("M1.val = 'a' and M2.val = 'b' and val = 'c'");
+		
+		map1.put("val", "a");
+		map2.put("val", "b");
+		map3.put("val", "c");
+		
+		System.out.println(exp.match(map1, map2, map3));
 	}
 }
