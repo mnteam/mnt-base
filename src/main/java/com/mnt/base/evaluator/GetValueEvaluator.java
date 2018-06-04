@@ -30,6 +30,8 @@ public class GetValueEvaluator extends AbstractEvaluator {
 			constantValue = expression.substring(1, expression.length() - 1);
 		} else if(expression.matches(NUMBER_REGEX)) {
 			constantValue = CommonUtil.parseAsDouble(expression);
+		} else if(expression.matches(BOOLEAN_REGEX)) { 
+			constantValue = Boolean.valueOf(expression);
 		} else {
 			String[] tokens = expression.split(PERIOD_REGEX);
 			

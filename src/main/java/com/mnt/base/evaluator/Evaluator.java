@@ -32,7 +32,8 @@ public interface Evaluator {
 	String EXPRESSION_MATCH_REGEX_STR 				= "\\[(M.*)\\](\\s*\\{(.*)\\})?";
 	Pattern EXPRESSION_MATCH_REGEX 					= Pattern.compile(EXPRESSION_MATCH_REGEX_STR);
 	
-	String NUMBER_REGEX								= "(\\-|\\+)?[0-9]+(\\.[0-9]*)?";
+	String NUMBER_REGEX								= "^(\\-|\\+)?[0-9]+(\\.[0-9]*)?$";
+	String BOOLEAN_REGEX							= "^(true|false)$";
 	char COMMA										= ',';
 	String PERIOD_REGEX								= "\\.";
 	String COMMA_REGEX	 							= "\\,";
