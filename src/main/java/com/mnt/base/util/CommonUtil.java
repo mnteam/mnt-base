@@ -70,6 +70,16 @@ public final class CommonUtil {
 		return false;
 	}
 	
+	public static boolean isEmpty(Object... os) {
+		for(Object o : os) {
+			if(!CommonUtil.isEmpty(o)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * Cast the object to specified type. 
 	 * 
