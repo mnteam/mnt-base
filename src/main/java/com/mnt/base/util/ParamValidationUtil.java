@@ -92,7 +92,7 @@ public class ParamValidationUtil {
 			return String.valueOf(paramValue);
 		}else if(paramValue instanceof String[] && ((String[])paramValue).length == 1){
 			String[] paramValueArr = (String[])paramValue;
-			if(CommonUtil.isEmpty(paramValueArr)){
+			if(CommonUtil.isEmpty((Object)paramValueArr)){
 				return null;
 			}else{
 				return paramValueArr[0];

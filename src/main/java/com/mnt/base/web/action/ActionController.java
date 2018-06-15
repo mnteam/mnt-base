@@ -107,7 +107,7 @@ public abstract class ActionController {
 			return String.valueOf(paramValue);
 		}else if(paramValue instanceof String[]){
 			String[] paramValueArr = (String[])paramValue;
-			if(CommonUtil.isEmpty(paramValueArr)){
+			if(CommonUtil.isEmpty((Object)paramValueArr)){
 				return null;
 			}else{
 				return paramValueArr[0];
@@ -126,7 +126,7 @@ public abstract class ActionController {
 			return String.valueOf(paramValue);
 		}else if(paramValue instanceof String[]){
 			String[] paramValueArr = (String[])paramValue;
-			if(CommonUtil.isEmpty(paramValueArr)){
+			if(CommonUtil.isEmpty((Object)paramValueArr)){
 				return null;
 			}else{
 				return paramValueArr[0];

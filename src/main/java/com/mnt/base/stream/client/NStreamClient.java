@@ -60,6 +60,8 @@ public class NStreamClient implements Runnable {
 	
 	protected static final int CONNECT_TIMEOUT = 3; // mill seconds
 	
+	protected ClientPacketProcessorManager clientPacketProcessorManager = ClientPacketProcessorManager.getInstance(this);
+	
 	public NStreamClient(String serverHost, int serverPort) {
 		this(serverHost, serverPort, 0, false);
 	}
@@ -81,11 +83,11 @@ public class NStreamClient implements Runnable {
 	}
 	
 	public void addPacketProcessor(PacketProcessor packetProcessor) {
-		ClientPacketProcessorManager.getInstance(this).addProcessor(packetProcessor);
+		clientPacketProcessorManager.addProcessor(packetProcessor);
 	}
 	
 	public void increasePacketProcessorThread(int threadSize) {
-		ClientPacketProcessorManager.getInstance(this).increaseProcessorThreads(threadSize);
+		clientPacketProcessorManager.increaseProcessorThreads(threadSize);
 	}
 	
 	protected NServerConnectionHandler getNServerConnectionHandler(NStreamClient streamClient) {
@@ -129,7 +131,7 @@ public class NStreamClient implements Runnable {
 	                    ChannelHandlerContext chx = ch.pipeline().lastContext();
 	                    //connection = new NClientNIOConnection(chx, UUID.randomUUID().toString(), NStreamClient.this);
 						connection = chx.channel().attr(NConnectionHandler.NSTREAM_CONNECTION_KEY).get();
-	                    ClientPacketProcessorManager.getInstance(NStreamClient.this).setConnection(connection);
+						clientPacketProcessorManager.setConnection(connection);
 						//chx.attr(NConnectionHandler.NSTREAM_HANDLER_KEY).set(new NServerResponseHandler(connection, NStreamClient.this));
 	                }
 	            });
