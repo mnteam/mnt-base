@@ -129,7 +129,7 @@ public class NStreamClient implements Runnable {
 	                    ChannelHandlerContext chx = ch.pipeline().lastContext();
 	                    //connection = new NClientNIOConnection(chx, UUID.randomUUID().toString(), NStreamClient.this);
 						connection = chx.channel().attr(NConnectionHandler.NSTREAM_CONNECTION_KEY).get();
-	                    ClientPacketProcessorManager.getInstance(this).setConnection(connection);
+	                    ClientPacketProcessorManager.getInstance(NStreamClient.this).setConnection(connection);
 						//chx.attr(NConnectionHandler.NSTREAM_HANDLER_KEY).set(new NServerResponseHandler(connection, NStreamClient.this));
 	                }
 	            });
