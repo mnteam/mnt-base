@@ -20,8 +20,6 @@
 
 package com.mnt.base.stream.client;
 
-import com.mnt.base.stream.comm.EventHandler;
-import com.mnt.base.stream.comm.EventHandler.EventType;
 import com.mnt.base.stream.comm.RequestHandler;
 import com.mnt.base.stream.netty.Connection;
 import com.mnt.base.stream.netty.NConnectionHandler;
@@ -31,7 +29,6 @@ import io.netty.channel.ChannelHandlerContext;
 public class NServerConnectionHandler extends NConnectionHandler {
 	
 	private NStreamClient streamClient;
-	private Connection connection = null;
 
     public NServerConnectionHandler(NStreamClient streamClient) {
         super();
@@ -40,7 +37,6 @@ public class NServerConnectionHandler extends NConnectionHandler {
 
     @Override
     public RequestHandler createRequestHandler(Connection connection) {
-    	this.connection = connection;
         return new NServerResponseHandler(connection, streamClient);
     }
 
@@ -49,20 +45,5 @@ public class NServerConnectionHandler extends NConnectionHandler {
 			ChannelHandlerContext channelHandlerContext, String connectionId) {
 		return new NClientNIOConnection(channelHandlerContext, connectionId, streamClient);
 	}
-
-	@Override
-	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		if(connection != null) {
-			connection.close();
-			EventHandler eh = streamClient.eventHandlerMap.get(EventType.Closed);
-			
-			if(eh != null) {
-				eh.handleEvent();
-			}
-		}
-		super.channelInactive(ctx);
-	}
-	
-	
 }
 

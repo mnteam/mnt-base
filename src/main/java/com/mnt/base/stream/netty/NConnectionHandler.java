@@ -20,12 +20,6 @@
 
 package com.mnt.base.stream.netty;
 
-import io.netty.channel.ChannelHandler.Sharable;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.Attribute;
-import io.netty.util.AttributeKey;
-
 import java.io.IOException;
 import java.util.UUID;
 
@@ -33,6 +27,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.mnt.base.stream.comm.RequestHandler;
+
+import io.netty.channel.ChannelHandler.Sharable;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
 
 /**
  * A ConnectionHandler is responsible for creating new sessions, destroying sessions and delivering
@@ -56,13 +56,13 @@ public abstract class NConnectionHandler extends ChannelInboundHandlerAdapter {
 	public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
 		super.handlerAdded(ctx);
 		
-		Connection conn = createConnection(ctx, UUID.randomUUID().toString());
+		Connection connection = createConnection(ctx, UUID.randomUUID().toString());
         // Create a new NIOConnection for the new session
         Attribute<Connection> connAttr = ctx.channel().attr(NSTREAM_CONNECTION_KEY);
-        connAttr.set(conn);
+        connAttr.set(connection);
         
         Attribute<RequestHandler> handlerAttr = ctx.channel().attr(NSTREAM_HANDLER_KEY);
-        handlerAttr.set(createRequestHandler(conn));
+        handlerAttr.set(createRequestHandler(connection));
 	}
 
 	@Override
@@ -87,6 +87,16 @@ public abstract class NConnectionHandler extends ChannelInboundHandlerAdapter {
         } else {
             Log.error(cause.getMessage(), cause);
         }
+	}
+	
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		Attribute<Connection> connAttr = ctx.channel().attr(NSTREAM_CONNECTION_KEY);
+		Connection conn = connAttr.get();
+		if(conn != null) {
+			conn.close();
+		}
+		super.channelInactive(ctx);
 	}
 
     public abstract Connection createConnection(ChannelHandlerContext channelHandlerContext, String connectionId);

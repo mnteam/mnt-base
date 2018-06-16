@@ -1,5 +1,16 @@
 package com.mnt.base.stream.server;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.mnt.base.stream.netty.NConnectionHandler;
+import com.mnt.base.stream.netty.NStreamDecoder;
+import com.mnt.base.stream.netty.NStreamEncoder;
+import com.mnt.base.util.CommonUtil;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -11,17 +22,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.mnt.base.stream.netty.NConnectionHandler;
-import com.mnt.base.stream.netty.NStreamDecoder;
-import com.mnt.base.stream.netty.NStreamEncoder;
-import com.mnt.base.util.CommonUtil;
 
 public class NStreamServer {
 
