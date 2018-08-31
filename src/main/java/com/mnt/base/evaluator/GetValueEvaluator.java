@@ -1,7 +1,6 @@
 package com.mnt.base.evaluator;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -111,7 +110,7 @@ public class GetValueEvaluator extends AbstractEvaluator {
 		return result;
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		Map<String, Object> map1 = new HashMap<>();
 		Map<String, Object> map2 = new HashMap<>();
 		Map<String, Object> map3 = new HashMap<>();
@@ -123,5 +122,5 @@ public class GetValueEvaluator extends AbstractEvaluator {
 		map3.put("val", "c");
 		
 		System.out.println(exp.match(map1, map2, map3));
-	}
+	}*/
 }

@@ -26,8 +26,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -161,10 +159,7 @@ public class SerializeUtil {
 		return result;
 	}
 	
-	
-	
-	
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		StringBuilder sb = new StringBuilder();
@@ -187,5 +182,5 @@ public class SerializeUtil {
 		
 		System.err.println("deserialize time(nano): " + (System.nanoTime() - t2));
 		System.out.println(dataMap.size());
-	}
+	}*/
 }

@@ -29,7 +29,6 @@ import java.lang.reflect.Type;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -861,7 +860,7 @@ public class BeanTool implements JsonSupport {
 		return new StringBuilder(METHOD_SET_PREFIX).append(fieldName.substring(0, 1).toUpperCase()).append(fieldName.substring(1)).toString();
 	}
 	
-	// code for test only
+	/*// code for test only
 	public static void main(String[] args) throws Exception {
 		//BeanA x = BeanTool.parse("{\"c\":[{\"i\":1,\"b\":true,\"s\":\"test\",\"f\":1.01,\"x\":" + System.currentTimeMillis() + "}],\"x\":{\"mine\":{\"i\":1,\"b\":true,\"s\":\"test\",\"f\":1.01,\"x\":" + System.currentTimeMillis() + "}},\"b\":{\"i\":2,\"b\":false,\"s\":\"ok\",\"f\":2.03,\"x\":" + System.currentTimeMillis() + "}}", BeanA.class);
 		
@@ -870,10 +869,10 @@ public class BeanTool implements JsonSupport {
 		Bean[] x = BeanTool.parse("[{\"i\":1,\"b\":true,\"s\":\"test\",\"f\":1.01,\"x\":" + System.currentTimeMillis() + "},{\"i\":1,\"b\":true,\"s\":\"test\",\"f\":1.01,\"x\":" + System.currentTimeMillis() + "}]", Bean[].class, false);
 		
 		System.out.println(Arrays.toString(x));
-	}
+	}*/
 }
 
-class BeanA {
+/*class BeanA {
 	
 	Map<String, Bean> val;
 	Bean b;
@@ -916,4 +915,4 @@ class Bean {
 		return "Bean [i=" + i + ", b=" + b + ", s=" + s + ", f=" + f
 				+ ", d=" + d + "]";
 	}
-}
+}*/

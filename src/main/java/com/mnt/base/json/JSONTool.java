@@ -373,7 +373,7 @@ public class JSONTool implements JsonSupport{
 		return jsonStr != null ? BeanTool.parseCollection(jsonStr, clazz, innerType, ignoreError) : null;
 	}
 	
-	// test only
+	/*// test only
 	public static void main(String[] args) {
 		String data = "{}";
 		
@@ -381,5 +381,5 @@ public class JSONTool implements JsonSupport{
 		Object json = JSONTool.convertJsonToObject(data);
 		
 		System.out.println(json);
-	}
+	}*/
 }

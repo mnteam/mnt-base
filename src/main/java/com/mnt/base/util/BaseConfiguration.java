@@ -51,23 +51,12 @@ public class BaseConfiguration {
 	private static String userDir;
 	private static boolean homeMode;
 	
-	private static int serverHTTPPort;
-	private static int webServerHTTPPort;
-	private static int serverShutdownPort;
-	private static String serverContextPath;
-	private static String webServerContextPath;
-	private static int jettyMaxThreadSize;
-	private static String adminUps;
-	private static boolean digestAuthEnabled;
-	private static boolean sessionEnabled;
-	private static String responseContentType = "text/json";
 	private static String baseConfPath;
-	private static String serverConfFolderName = "conf";
 	
 	static {
 		populateServerHome();
 		loadConfig(ItemKeyDef.V_CONFIG_FILE_PATH);
-		setupDefaultConfItems();
+		loadBaseConf();
 	}
 
 	protected BaseConfiguration() {
@@ -76,7 +65,7 @@ public class BaseConfiguration {
 	
 	protected BaseConfiguration(String confPath) {
 		loadConfig(confPath);
-		setupDefaultConfItems();
+		loadBaseConf();
 	}
 
 	public static BaseConfiguration getInstance() {
@@ -136,21 +125,9 @@ public class BaseConfiguration {
 		}
 	}
 	
-	private static void setupDefaultConfItems() {
+	/*private static void setupDefaultConfItems() {
 		loadBaseConf();
-		
-		serverHTTPPort 		= getIntProperty(ItemKeyDef.K_SERVER_HTTP_PORT, 8080);
-		webServerHTTPPort 	= getIntProperty(ItemKeyDef.K_WEB_SERVER_HTTP_PORT, serverHTTPPort);
-		serverShutdownPort 	= getIntProperty(ItemKeyDef.K_SERVER_SHUTDOWN_PORT, 48080);
-		serverContextPath 	= getProperty(ItemKeyDef.K_SERVER_CONTEXT_PATH);
-		webServerContextPath= getProperty(ItemKeyDef.K_WEB_SERVER_CONTEXT_PATH, serverContextPath);
-		jettyMaxThreadSize	= getIntProperty(ItemKeyDef.K_JETTY_MAX_THREAD_SIZE, 256);
-		adminUps			= getProperty(ItemKeyDef.K_ADMIN_UPS);
-		digestAuthEnabled 	= getBoolProperty(ItemKeyDef.K_DIGEST_AUTH_ENABLED);
-		sessionEnabled  	= getBoolProperty(ItemKeyDef.K_SESSION_ENABLED);
-		responseContentType = getProperty(ItemKeyDef.K_RESPONSE_CONTENT_TYPE, responseContentType);
-		serverConfFolderName = getProperty(ItemKeyDef.K_SERVER_CONF_FOLDER_NAME, serverConfFolderName);
-	}
+	}*/
 	
 	private static void loadBaseConf() {
 		
@@ -182,7 +159,7 @@ public class BaseConfiguration {
 	 * @return
 	 */
 	public static String getProperty(String key) {
-		return prop.getProperty(key);
+		return getProperty(key, null);
 	}
 	
 	/**
@@ -193,7 +170,24 @@ public class BaseConfiguration {
 	 * @return
 	 */
 	public static String getProperty(String key, String defaultValue) {
-		String resultVal = prop.getProperty(key);
+		String resultVal = null;
+		
+		if(configProvider != null) {
+			if(overrideFlag) {
+				resultVal = configProvider.get(key);
+				if(resultVal == null) {
+					resultVal = prop.getProperty(key);
+				}
+			} else {
+				resultVal = prop.getProperty(key);
+				if(resultVal == null) {
+					resultVal = configProvider.get(key);
+				}
+			}
+		} else {
+			resultVal = prop.getProperty(key);
+		}
+		
 		return CommonUtil.isEmpty(resultVal) ? defaultValue : resultVal;
 	}
 	
@@ -215,7 +209,7 @@ public class BaseConfiguration {
 	 * @return
 	 */
 	public static int getIntProperty(String key, int defaultValue) {
-		return CommonUtil.parseAsInt(prop.getProperty(key), defaultValue);
+		return CommonUtil.parseAsInt(getProperty(key), defaultValue);
 	}
 	
 	/**
@@ -236,7 +230,7 @@ public class BaseConfiguration {
 	 * @return
 	 */
 	public static float getFloatProperty(String key, float defaultValue) {
-		return CommonUtil.parseAsFloat(prop.getProperty(key), defaultValue);
+		return CommonUtil.parseAsFloat(getProperty(key), defaultValue);
 	}
 	
 	/**
@@ -257,7 +251,7 @@ public class BaseConfiguration {
 	 * @return
 	 */
 	public static long getLongProperty(String key, long defaultValue) {
-		return CommonUtil.parseAsLong(prop.getProperty(key), defaultValue);
+		return CommonUtil.parseAsLong(getProperty(key), defaultValue);
 	}
 	
 	/**
@@ -278,7 +272,7 @@ public class BaseConfiguration {
 	 * @return
 	 */
 	public static double getDoubleProperty(String key, double defaultValue) {
-		return CommonUtil.parseAsDouble(prop.getProperty(key), defaultValue);
+		return CommonUtil.parseAsDouble(getProperty(key), defaultValue);
 	}
 	
 	/**
@@ -299,55 +293,63 @@ public class BaseConfiguration {
 	 * @return
 	 */
 	public static boolean getBoolProperty(String key, boolean defaultValue) {
-		return CommonUtil.parseAsBoolean(prop.getProperty(key), defaultValue);
+		return CommonUtil.parseAsBoolean(getProperty(key), defaultValue);
 	}
 	
 	public static int getServerShutdownPort() {
-		return serverShutdownPort;
+		return getIntProperty(ItemKeyDef.K_SERVER_SHUTDOWN_PORT, 47070);
 	}
 
 	public static int getWebServerHTTPPort() {
-		return webServerHTTPPort;
+		return getIntProperty(ItemKeyDef.K_WEB_SERVER_HTTP_PORT, 7070);
 	}
 
 	public static String getWebServerContextPath() {
-		return webServerContextPath;
+		return getProperty(ItemKeyDef.K_WEB_SERVER_CONTEXT_PATH, "");
 	}
 
 	public static String getServerContextPath() {
-		return serverContextPath;
+		return getProperty(ItemKeyDef.K_SERVER_CONTEXT_PATH, "");
 	}
 
 	public static int getJettyMaxThreadSize() {
-		return jettyMaxThreadSize;
+		return getIntProperty(ItemKeyDef.K_JETTY_MAX_THREAD_SIZE, 256);
 	}
 
 	public static String getAdminUps() {
-		return adminUps;
+		return getProperty(ItemKeyDef.K_ADMIN_UPS, "");
 	}
 
+	public static int getServerHTTPPort() {
+		return getIntProperty(ItemKeyDef.K_SERVER_HTTP_PORT, 7070);
+	}
+
+	public static boolean isDigestAuthEnabled() {
+		return getBoolProperty(ItemKeyDef.K_DIGEST_AUTH_ENABLED, false);
+	}
+	
+	public static boolean isSessionEnabled() {
+		return getBoolProperty(ItemKeyDef.K_SESSION_ENABLED, false);
+	}
+
+	public static String getResponseContentType() {
+		return getProperty(ItemKeyDef.K_RESPONSE_CONTENT_TYPE, "text/json");
+	}
+	
+	public static String getConfFolderName() {
+		return getProperty(ItemKeyDef.K_CONF_FOLDER_NAME, "conf");
+	}
+	
+	public static boolean isHomeMode() {
+		return homeMode;
+	}
+	
 	public static String getServerHome() {
 		return serverHome;
 	}
 	
 	public static String getServerHome(boolean defaultUserDir) {
 		return homeMode ? serverHome : userDir;
-	}
-
-	public static int getServerHTTPPort() {
-		return serverHTTPPort;
-	}
-
-	public static boolean isDigestAuthEnabled() {
-		return digestAuthEnabled;
-	}
-	
-	public static boolean isSessionEnabled() {
-		return sessionEnabled;
-	}
-
-	public static String getResponseContentType() {
-		return responseContentType;
 	}
 	
 	public static Map<String, String> loadKeyValuePairs(InputStream in) {
@@ -386,6 +388,19 @@ public class BaseConfiguration {
 		return loadKeyValuePairs(getRelativeFileStream(confPath));
 	}
 	
+	
+	public static interface ConfigProvider {
+		String get(String key);
+	}
+	
+	private static ConfigProvider configProvider;
+	private static boolean overrideFlag = false;
+	
+	public static void applyExtenalConfig(ConfigProvider cp, final boolean override) {
+		BaseConfiguration.configProvider = cp;
+		BaseConfiguration.overrideFlag = override;
+	}
+	
 	/**
 	 * return the conf related file input stream, if the server conf is home configured mode, use the home related mode,
 	 * else use the class path mode
@@ -404,7 +419,7 @@ public class BaseConfiguration {
 			
 			if(in == null) {
 				try {
-					in = new FileInputStream(new StringBuilder(getServerHome()).append(serverConfFolderName).append(File.separator).append(confPath).toString());
+					in = new FileInputStream(new StringBuilder(getServerHome()).append(getConfFolderName()).append(File.separator).append(confPath).toString());
 				} catch (FileNotFoundException e) {
 					in = null;
 				}
@@ -414,10 +429,6 @@ public class BaseConfiguration {
 		}
 		
 		return in;
-	}
-	
-	public static boolean isHomeMode() {
-		return homeMode;
 	}
 
 	private interface ItemKeyDef {
@@ -433,6 +444,6 @@ public class BaseConfiguration {
 		String K_SESSION_ENABLED 		= "session_enabled";
 		String V_CONFIG_FILE_PATH 		= "server.conf";
 		String K_RESPONSE_CONTENT_TYPE 	= "response_content_type";
-		String K_SERVER_CONF_FOLDER_NAME= "server_conf_folder_name";
+		String K_CONF_FOLDER_NAME		= "conf_folder_name";
 	}
 }

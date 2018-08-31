@@ -442,7 +442,7 @@ public class DigestAuthenticator {
 	}
 	
 	//http://www.javadocexamples.com/java_source/sun/net/www/protocol/http/DigestAuthentication.java.html
-	public static void main(String[] args){
+	/*public static void main(String[] args){
 
 		// 
 		// keyval: {response=4b0e199f300a0420630e146d3294e4f7, cnonce=3b63996689cc9a85, username=admin, nc=00000001, qop=auth, nonce=3dcdefef-c019-4636-bc8f-65238d494422, realm=www.mntplay.com, opaque=f825ef87-c100-4587-b13f-9fea4fbba74f, uri=/monitor/, algorithm=MD5-sess}
@@ -508,5 +508,5 @@ public class DigestAuthenticator {
 		System.out.println(md5(HA1, ":", validNonce, ":", keyVal.get("nc"), ":", keyVal.get("cnonce"), ":", keyVal.get("qop"), ":", HA2));
 
 		System.out.println(result);
-	}
+	}*/
 }

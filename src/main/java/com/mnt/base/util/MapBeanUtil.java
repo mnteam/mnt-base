@@ -33,7 +33,6 @@ import java.sql.Timestamp;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -569,8 +568,7 @@ public class MapBeanUtil {
 		return new StringBuilder(METHOD_SET_PREFIX).append(fieldName.substring(0, 1).toUpperCase()).append(fieldName.substring(1)).toString();
 	}
 	
-	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		
 		Bean b = new Bean();
 		
@@ -604,10 +602,10 @@ public class MapBeanUtil {
 		ba = convertToBean(newBeanAMap, BeanA.class);
 		
 		System.out.println(ba);
-	}
+	}*/
 }
 
-class BeanA {
+/*class BeanA {
 	
 	Map<String, Bean> val;
 	Bean b;
@@ -651,4 +649,4 @@ class Bean {
 		return "Bean [i=" + i + ", b=" + b + ", s=" + s + ", f=" + f
 				+ ", d=" + d + ", t=" + t + "]";
 	}
-}
+}*/
