@@ -1,9 +1,12 @@
 package com.mnt.base.evaluator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mnt.base.json.JSONTool;
 import com.mnt.base.util.CommonUtil;
 
 
@@ -104,23 +107,25 @@ public class GetValueEvaluator extends AbstractEvaluator {
 					result = null;
 					break;
 				}
+			} else if(result != null && result instanceof String) {
+				result = JSONTool.convertJsonToObject((String)result);
+				i--;
+				continue;
 			}
 		}
 		
 		return result;
 	}
 	
-	/*public static void main(String[] args) {
-		Map<String, Object> map1 = new HashMap<>();
-		Map<String, Object> map2 = new HashMap<>();
-		Map<String, Object> map3 = new HashMap<>();
+	public static void main(String[] args) {
+		Map<String, Object> vMap = new HashMap<>();
 		
-		Expression exp = new Expression("M1.val = 'a' and M2.val = 'b' and val = 'c'");
+		List<Object> vList = new ArrayList<>();
+		vList.add("{'subKey':'asd'}");
 		
-		map1.put("val", "a");
-		map2.put("val", "b");
-		map3.put("val", "c");
+		vMap.put("a", vList);
 		
-		System.out.println(exp.match(map1, map2, map3));
-	}*/
+		Evaluator eval = AbstractEvaluator.parseEvaluator("a.0.subKey");
+		System.out.println(eval.eval(vMap));
+	}
 }

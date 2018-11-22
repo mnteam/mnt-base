@@ -66,6 +66,10 @@ public abstract class AbstractEvaluator implements Evaluator {
 		// empty
 	}
 	
+	public Object eval(Object val) {
+		return eval(new Object[]{val});
+	}
+	
 	public static void setMapIndexPrefiex(String prefix) {
 		MAP_INDEX_PREFIX = prefix;
 	}

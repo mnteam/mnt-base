@@ -97,7 +97,9 @@ public interface Evaluator {
 	
 	String[] STRING_ARR_TEMP = new String[0];
 	
-	Object eval(Object... ms);
+	Object eval(Object[] ms);
+	
+	Object eval(Object ms);
 	
 	void setOutputFormatter(OutputFormatter outputFormatter);
 }
