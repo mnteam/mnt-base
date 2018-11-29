@@ -42,7 +42,9 @@ public interface Evaluator {
 	String STR_POUND								= "#";
 	String STR_EXCLAMATORY_MARK						= "!";
 	String KEY_DEFAULT								= "default";
-	
+
+	String REGULAR_EXPRESSION					    = "MATCH";
+
 	char SQL_EXPRESSION_START 						= '(';
 	char SQL_EXPRESSION_END 						= ')';
 	
@@ -68,6 +70,8 @@ public interface Evaluator {
 	char SQL_NOT_FLAG_CHAR							= '!';
 	String SQL_NOT_FLAG								= String.valueOf(SQL_NOT_FLAG_CHAR);
 	
+	int REGULAR_EXPRESSION_N						= 301;
+
 	int SQL_EXPRESSION_EQ_N							= 101;
 	int SQL_EXPRESSION_NE_N							= 102;
 	int SQL_EXPRESSION_LT_N							= 103;

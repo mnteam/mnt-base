@@ -3,6 +3,7 @@ package com.mnt.base.evaluator;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.mnt.base.util.CommonUtil;
 import com.mnt.base.util.IndexableString;
@@ -127,7 +128,9 @@ public class LogicEvaluator extends AbstractEvaluator {
 					}
 					
 					Integer logicTypeIndex = SQL_EVAL_MAP.get(token);
+					boolean regularExpressionFlag = false;
 					if(logicTypeIndex != null) {
+						regularExpressionFlag = logicTypeIndex.equals(REGULAR_EXPRESSION_N);
 						logicOps.add(logicTypeIndex);
 					} else {
 						throw new RuntimeException("invalid logic eval function: " + token);
@@ -149,6 +152,9 @@ public class LogicEvaluator extends AbstractEvaluator {
 					
 					if(inFlag) {
 						subEvaluators.add(new ConstantListEvaluator(token.substring(1, token.length() - 1)));
+					}else if(regularExpressionFlag){
+						//增加一个正则表达式evaluator
+						subEvaluators.add(new RegexEvaluator(token));
 					} else {
 						subEvaluators.add(AbstractEvaluator.parseEvaluator((token)));
 					}
@@ -349,6 +355,11 @@ public class LogicEvaluator extends AbstractEvaluator {
 			case SQL_EXPRESSION_NOT_INS_N : {
 				List<Object> rightParamList = CommonUtil.uncheckedListCast(rightParam);
 				result = rightParamList == null ? true : !rightParamList.contains(String.valueOf(leftParam));
+				break;
+			}
+
+			case REGULAR_EXPRESSION_N: {
+				result = ((Pattern)rightParam).matcher(CommonUtil.castAsString(leftParam)).find();
 				break;
 			}
 		}

@@ -43,7 +43,9 @@ public abstract class AbstractEvaluator implements Evaluator {
 		
 		SQL_EVAL_MAP.put(SQL_EXPRESSION_AND, SQL_EXPRESSION_AND_N);
 		SQL_EVAL_MAP.put(SQL_EXPRESSION_OR, SQL_EXPRESSION_OR_N);
-		
+
+		SQL_EVAL_MAP.put(REGULAR_EXPRESSION, REGULAR_EXPRESSION_N);
+
 		try {
 			registerFormatter("int", CommonUtil.class.getDeclaredMethod("parseAsInt", Object.class));
 			registerFormatter("float", CommonUtil.class.getDeclaredMethod("parseAsFloat", Object.class));
