@@ -359,8 +359,12 @@ public class LogicEvaluator extends AbstractEvaluator {
 			}
 
 			case REGULAR_EXPRESSION_N: {
-				result = ((Pattern)rightParam).matcher(CommonUtil.castAsString(leftParam)).find();
-				break;
+			    if (leftParam == null || rightParam == null) {
+			        result = false;
+			    } else {
+			        result = ((Pattern) rightParam).matcher(CommonUtil.castAsString(leftParam)).find();
+			    }
+			    break;
 			}
 		}
 		
