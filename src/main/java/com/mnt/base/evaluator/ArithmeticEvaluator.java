@@ -2,7 +2,9 @@ package com.mnt.base.evaluator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.mnt.base.util.CommonUtil;
 
@@ -13,6 +15,8 @@ public class ArithmeticEvaluator extends AbstractEvaluator {
 	private final static char MUL		= '*';
 	private final static char DIV		= '/';
 	private final static char MOD		= '%';
+	
+	public final static Set<Character> firstLayerOps = new HashSet<>(Arrays.asList(MUL, DIV, MOD));
 	
 	public static final char[] ARITHMETIC_METHODS = {ADD, SUB, MUL, DIV, MOD};
 	static {
@@ -26,8 +30,8 @@ public class ArithmeticEvaluator extends AbstractEvaluator {
 		super(expression);
 	}
 
-	@Override
-	public Object eval(Object[] ms) {
+	@Deprecated
+	public Object evalbak(Object[] ms) {
 		Object value = evaluators.get(0).eval(ms);
 		for(int i = 0; i < arthMethods.size(); i++) {
 			switch(arthMethods.get(i)) {
@@ -36,6 +40,43 @@ public class ArithmeticEvaluator extends AbstractEvaluator {
 			case MUL : value = CommonUtil.parseAsDouble(value) * CommonUtil.parseAsDouble(evaluators.get(i + 1).eval(ms));break;
 			case DIV : value = CommonUtil.parseAsDouble(value) / CommonUtil.parseAsDouble(evaluators.get(i + 1).eval(ms));break;
 			case MOD : value = CommonUtil.parseAsDouble(value) % CommonUtil.parseAsDouble(evaluators.get(i + 1).eval(ms));break;
+			}
+		}
+		
+		Number vn = CommonUtil.parseAsLong(value);
+		if(vn.doubleValue() == ((Number)value).doubleValue()) {
+			value = vn;
+		}
+		
+		return value;
+	}
+	
+	@Override
+	public Object eval(Object[] ms) {
+		
+		List<Evaluator> evals = new ArrayList<>(evaluators);
+		List<Character> arthMs = new ArrayList<>(arthMethods);
+		
+		for(int i = 0; i < arthMs.size(); i++) {
+			Object value = null;
+			switch(arthMs.get(i)) {
+				case MUL : value = CommonUtil.parseAsDouble(evals.get(i).eval(ms)) * CommonUtil.parseAsDouble(evals.get(i + 1).eval(ms));break;
+				case DIV : value = CommonUtil.parseAsDouble(evals.get(i).eval(ms)) / CommonUtil.parseAsDouble(evals.get(i + 1).eval(ms));break;
+				case MOD : value = CommonUtil.parseAsDouble(evals.get(i).eval(ms)) % CommonUtil.parseAsDouble(evals.get(i + 1).eval(ms));break;
+			}
+			
+			if(value != null) {
+				evals.remove(i + 1);
+				evals.set(i, new ConstantEvaluator(value));
+				arthMs.remove(i--);
+			}
+		}
+		
+		Object value = evals.get(0).eval(ms);
+		for(int i = 0; i < arthMs.size(); i++) {
+			switch(arthMs.get(i)) {
+			case ADD : value = CommonUtil.parseAsDouble(value) + CommonUtil.parseAsDouble(evals.get(i + 1).eval(ms));break;
+			case SUB : value = CommonUtil.parseAsDouble(value) - CommonUtil.parseAsDouble(evals.get(i + 1).eval(ms));break;
 			}
 		}
 		

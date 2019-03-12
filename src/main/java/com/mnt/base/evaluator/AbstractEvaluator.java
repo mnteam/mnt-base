@@ -272,10 +272,35 @@ public abstract class AbstractEvaluator implements Evaluator {
 		return items;
 	}
 	
+	private static boolean fullMatch(String expr, char start, char end) {
+		int lastCharIdx = expr.length() - 1;
+		if(expr.charAt(0) == start && expr.charAt(lastCharIdx) == end) {
+			int depth = 1;
+			for(int i = 1; i < lastCharIdx; i++) { 
+				if(expr.charAt(i) == start) {
+					depth ++;
+				} else if(expr.charAt(i) == end) {
+					depth --;
+					
+					if(depth == 0) {
+						return false;
+					}
+				}
+			}
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public static Evaluator parseEvaluator(String expression) {
 		
-		while(expression.charAt(0) == SQL_EXPRESSION_START && expression.charAt(expression.length() - 1) == SQL_EXPRESSION_END) {
+		expression = expression.trim();
+		//while(expression.charAt(0) == SQL_EXPRESSION_START && expression.charAt(expression.length() - 1) == SQL_EXPRESSION_END) {
+		while(fullMatch(expression, SQL_EXPRESSION_START, SQL_EXPRESSION_END)) {
 			expression = expression.substring(1, expression.length() - 1);
+			expression = expression.trim();
 		}
 		
 		Evaluator evaluator;
