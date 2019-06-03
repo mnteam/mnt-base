@@ -142,6 +142,8 @@ public abstract class PacketProcessorManager implements Runnable{
 				streamPacket = streamPacketQueueMap.get((int)Math.abs(pollAi.incrementAndGet() % maxQueueMapSize)).poll(1, TimeUnit.MINUTES);
 			} catch (InterruptedException e) {
 				log.error("Error while process the stream packet in processor queue", e);
+				Thread.currentThread().interrupt();
+				runningFlag = false;
 			}
 			
 			if(streamPacket != null){

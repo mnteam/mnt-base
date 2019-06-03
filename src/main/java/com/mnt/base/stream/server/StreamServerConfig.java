@@ -32,21 +32,7 @@ import com.mnt.base.util.BaseConfiguration;
  */
 public class StreamServerConfig extends BaseConfiguration {
 	
-	private static int serverTcpPort				= 0;
-	private static String tcpBindInterfaceName		= null;
-	private static int tcpEventThreads				= 1;
-	private static long eventThreadAliveTime		= 60; // unit: sec
-	private static int listenBackLog				= 50;
-	private static int socketReceiveBufferSize		= -1;
-	private static int socketSendBufferSize			= -1;
-	private static int socketSoLingerSeconds		= -1;
-	private static int tcpMaxIdleTime				= 6 * 60 * 1000;
-	private static boolean disablePacketCacheQueue	= false;
-	
 	private final static StreamServerConfig instance = new StreamServerConfig();
-	static {
-		setupDefaultConfItems();
-	}
 	
 	protected StreamServerConfig(){
 		super();
@@ -54,64 +40,50 @@ public class StreamServerConfig extends BaseConfiguration {
 	
 	protected StreamServerConfig(String confPath) {
 		super(confPath);
-		setupDefaultConfItems();
 	}
 	
 	public static StreamServerConfig getInstance() {
 		return instance;
 	}
 	
-	private static void setupDefaultConfItems() {
-		serverTcpPort       		= getIntProperty(ItemKeyDef.K_SERVER_TCP_PORT, 5050);
-		eventThreadAliveTime 		= getIntProperty(ItemKeyDef.K_EVENT_THREAD_ALIVE_TIME, 60);
-		tcpEventThreads      		= getIntProperty(ItemKeyDef.K_TCP_EVENT_THREADS, 1);
-		tcpBindInterfaceName 		= getProperty(ItemKeyDef.K_TCP_BIND_INTERFACE_NAME);
-		listenBackLog 				= getIntProperty(ItemKeyDef.K_LISTEN_BACK_LOG, 50);
-		socketReceiveBufferSize 	= getIntProperty(ItemKeyDef.K_SOCKET_RECEIVE_BUFFER_SIZE, -1);
-		socketSendBufferSize 		= getIntProperty(ItemKeyDef.K_SOCKET_SEND_BUFFER_SIZE, -1);
-		socketSoLingerSeconds 		= getIntProperty(ItemKeyDef.K_SOCKET_SO_LINGER_SECONDS, -1);
-		tcpMaxIdleTime				= getIntProperty(ItemKeyDef.K_TCP_MAX_IDLE_TIME, 6 * 60 * 1000);
-		disablePacketCacheQueue 	= getBoolProperty(ItemKeyDef.K_DISABLE_PACKET_CACHE_QUEUE);
-	}
-	
 	public static int getServerTcpPort() {
-		return serverTcpPort;
+		return getIntProperty(ItemKeyDef.K_SERVER_TCP_PORT, 5050);
 	}
 	
 	public static String getTcpBindInterfaceName() {
-		return tcpBindInterfaceName;
+		return getProperty(ItemKeyDef.K_TCP_BIND_INTERFACE_NAME);
 	}
 	
 	public static int getTcpEventThreads() {
-		return tcpEventThreads;
+		return getIntProperty(ItemKeyDef.K_TCP_EVENT_THREADS, 1);
 	}
 
 	public static long getEventThreadAliveTime() {
-		return eventThreadAliveTime;
+		return getIntProperty(ItemKeyDef.K_EVENT_THREAD_ALIVE_TIME, 60);
 	}
 
 	public static int getListenBackLog() {
-		return listenBackLog;
+		return getIntProperty(ItemKeyDef.K_LISTEN_BACK_LOG, 50);
 	}
 
 	public static int getSocketReceiveBufferSize() {
-		return socketReceiveBufferSize;
+		return getIntProperty(ItemKeyDef.K_SOCKET_RECEIVE_BUFFER_SIZE, -1);
 	}
 
 	public static int getSocketSendBufferSize() {
-		return socketSendBufferSize;
+		return getIntProperty(ItemKeyDef.K_SOCKET_SEND_BUFFER_SIZE, -1);
 	}
 
 	public static int getSocketSoLingerSeconds() {
-		return socketSoLingerSeconds;
+		return getIntProperty(ItemKeyDef.K_SOCKET_SO_LINGER_SECONDS, -1);
 	}
 
 	public static int getTcpMaxIdleTime() {
-		return tcpMaxIdleTime;
+		return getIntProperty(ItemKeyDef.K_TCP_MAX_IDLE_TIME, 6 * 60 * 1000);
 	}
 	
 	public static boolean disablePacketCacheQueue() {
-		return disablePacketCacheQueue;
+		return getBoolProperty(ItemKeyDef.K_DISABLE_PACKET_CACHE_QUEUE);
 	}
 	
 	private interface ItemKeyDef {
